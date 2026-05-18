@@ -2,7 +2,8 @@ FROM php:8.4-fpm AS base
 
 USER root
 
-RUN apt-get update && apt-get install -y nginx
+RUN sed -i 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
 
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 
