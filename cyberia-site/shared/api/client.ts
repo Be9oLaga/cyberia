@@ -1,35 +1,30 @@
-import { Project } from '@/entities/project/model/types';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-export interface Service {
-  id: number;
-  title: string;
-  description: string;
+interface RequestOptions {
+  method?: HttpMethod;
+  body?: unknown;
+  headers?: HeadersInit;
 }
 
-export interface Post {
-  id: number;
-  title: string;
-  content: string;
-}
+export const apiClient = async <T>(
+  endpoint: string,
+  { method = 'GET', body, headers = {} }: RequestOptions = {}
+): Promise<T> => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+  const url = `${baseUrl}${endpoint}`;
 
-const mockProjects: Project[] = [
-  {
-    id: 1,
-    title: 'Forkagro',
-    description: 'Платформа для развития агробизнеса на национальном и международном рынке',
-    image: '/forkagro.jpg',
-    price: 1200000,
-  },
-  {
-    id: 2,
-    title: 'Технум',
-    description: 'Лендинги, промо-сайты',
-    image: '/technum.jpg',
-  },
-];
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
 
-export const api = {
-  getProjects: (): Promise<Project[]> => Promise.resolve(mockProjects),
-  getServices: (): Promise<Service[]> => Promise.resolve([]),
-  getPosts: (): Promise<Post[]> => Promise.resolve([]),
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+
+  return response.json();
 };

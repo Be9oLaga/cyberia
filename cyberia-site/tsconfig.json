@@ -22,19 +22,9 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@/shared/*": [
-        "./shared/*"
-      ],
-      "@/entities/*": [
-        "./entities/*"
-      ],
-      "@/features/*": [
-        "./features/*"
       ]
     }
   },
